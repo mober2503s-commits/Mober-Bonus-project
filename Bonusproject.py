@@ -2,11 +2,19 @@ import streamlit as st
 
 # ---------------- LOGIC FUNCTIONS ---------------- #
 
-def calculate_bmi(weight, height):
-    if height <= 0:
+def calculate_bmi_kg_cm(weight_kg, height_cm):
+    if height_cm <= 0:
         raise ValueError("Height must be greater than zero.")
-    bmi = weight / (height ** 2)
-    return round(bmi, 2)
+
+    height_m = height_cm / 100
+    return round(weight_kg / (height_m ** 2), 2)
+
+
+def calculate_bmi_lb_in(weight_lb, height_in):
+    if height_in <= 0:
+        raise ValueError("Height must be greater than zero.")
+
+    return round(703 * weight_lb / (height_in ** 2), 2)
 
 
 def bmi_category(bmi):
@@ -24,22 +32,38 @@ def bmi_category(bmi):
 st.set_page_config(page_title="BMI Calculator", page_icon="⚖️")
 
 st.title("⚖️ BMI Calculator")
-st.write("Enter your details to calculate your Body Mass Index")
+
+st.write("Select your height and weight units")
+
+# Unit selection
+height_unit = st.selectbox("Select Height Unit:", ["Centimeters (cm)", "Inches (in)"])
+weight_unit = st.selectbox("Select Weight Unit:", ["Kilograms (kg)", "Pounds (lb)"])
 
 # Input fields
-weight = st.number_input("Enter your weight (kg)", min_value=0.0, format="%.2f")
-height = st.number_input("Enter your height (meters)", min_value=0.0, format="%.2f")
+weight = st.number_input(f"Enter your weight ({weight_unit})", min_value=0.0, format="%.2f")
+height = st.number_input(f"Enter your height ({height_unit})", min_value=0.0, format="%.2f")
 
-# Button
+# Calculate button
 if st.button("Calculate BMI"):
 
     try:
-        bmi = calculate_bmi(weight, height)
+        # Match correct formula to selected units
+        if weight_unit == "Kilograms (kg)" and height_unit == "Centimeters (cm)":
+            bmi = calculate_bmi_kg_cm(weight, height)
+
+        elif weight_unit == "Pounds (lb)" and height_unit == "Inches (in)":
+            bmi = calculate_bmi_lb_in(weight, height)
+
+        else:
+            st.error("Please use matching units: kg with cm OR lb with inches.")
+            st.stop()
+
         category = bmi_category(bmi)
 
         st.success(f"Your BMI is: {bmi}")
-        st.info(f"Category: {category}")
+        st.info(f"Health Category: {category}")
 
     except ValueError as e:
         st.error(str(e))
+
         #This is the website https://moberawanbmi.streamlit.app/.
