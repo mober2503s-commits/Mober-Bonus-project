@@ -38,7 +38,7 @@ def bmi_category(bmi):
 
 # ---------------- UI DESIGN ---------------- #
 
-st.set_page_config(page_title="BMI Calculator", page_icon="⚖️")
+st.set_page_config(page_title="BMI Calculator", page_icon="🏃")
 
 st.title("⚖️ Smart BMI Calculator")
 
