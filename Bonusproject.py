@@ -40,7 +40,7 @@ def bmi_category(bmi):
 
 st.set_page_config(page_title="BMI Calculator", page_icon="🏃")
 
-st.title("⚖️ Smart BMI Calculator")
+st.title("🔢 Smart BMI Calculator")
 
 st.write("Enter your height and weight in any units")
 
