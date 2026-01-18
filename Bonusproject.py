@@ -1,6 +1,6 @@
 import streamlit as st
 
-# ---------------- LOGIC FUNCTIONS ---------------- #
+
 
 def calculate_bmi_kg_cm(weight_kg, height_cm):
     if height_cm <= 0:
@@ -27,7 +27,7 @@ def bmi_category(bmi):
     else:
         return "Obese"
 
-# ---------------- UI DESIGN ---------------- #
+
 
 st.set_page_config(page_title="BMI Calculator", page_icon="🏃")
 
@@ -35,19 +35,19 @@ st.title("🔢 BMI Calculator")
 
 st.write("Select your height and weight units")
 
-# Unit selection
+
 height_unit = st.selectbox("Select Height Unit:", ["Centimeters (cm)", "Inches (in)"])
 weight_unit = st.selectbox("Select Weight Unit:", ["Kilograms (kg)", "Pounds (lb)"])
 
-# Input fields
+
 weight = st.number_input(f"Enter your weight ({weight_unit})", min_value=0.0, format="%.2f")
 height = st.number_input(f"Enter your height ({height_unit})", min_value=0.0, format="%.2f")
 
-# Calculate button
+
 if st.button("Calculate BMI"):
 
     try:
-        # Match correct formula to selected units
+       
         if weight_unit == "Kilograms (kg)" and height_unit == "Centimeters (cm)":
             bmi = calculate_bmi_kg_cm(weight, height)
 
