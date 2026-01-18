@@ -1,60 +1,71 @@
-import streamlit as st 
+import streamlit as st
+
+# ---------------- LOGIC FUNCTIONS ---------------- #
+
+def calculate_bmi_kg_cm(weight_kg, height_cm):
+    if height_cm <= 0:
+        raise ValueError("Height must be greater than zero.")
+
+    height_m = height_cm / 100
+    return round(weight_kg / (height_m ** 2), 2)
 
 
+def calculate_bmi_lb_in(weight_lb, height_in):
+    if height_in <= 0:
+        raise ValueError("Height must be greater than zero.")
 
-def convert_height_to_meters(height, unit): if height <= 0: raise ValueError("Height must be greater than zero.") 
+    return round(703 * weight_lb / (height_in ** 2), 2)
 
-if unit == "Centimeters (cm)": 
-   return height / 100 
-elif unit == "Inches (in)": 
-   return height * 0.0254 
- 
 
-def convert_weight_to_kg(weight, unit): if weight <= 0: raise ValueError("Weight must be greater than zero.") 
+def bmi_category(bmi):
+    if bmi < 18.5:
+        return "Underweight"
+    elif 18.5 <= bmi < 24.9:
+        return "Normal weight"
+    elif 25 <= bmi < 29.9:
+        return "Overweight"
+    else:
+        return "Obese"
 
-if unit == "Kilograms (kg)": 
-   return weight 
-elif unit == "Pounds (lb)": 
-   return weight * 0.453592 
- 
+# ---------------- UI DESIGN ---------------- #
 
-def calculate_bmi(weight_kg, height_m): return round(weight_kg / (height_m ** 2), 2) 
+st.set_page_config(page_title="BMI Calculator", page_icon="⚖️")
 
-def bmi_category(bmi): if bmi < 18.5: return "Underweight" elif 18.5 <= bmi < 24.9: return "Normal weight" elif 25 <= bmi < 29.9: return "Overweight" else: return "Obese" 
+st.title("⚖️ BMI Calculator")
 
----------------- UI DESIGN ---------------- 
+st.write("Select your height and weight units")
 
-st.set_page_config(page_title="BMI Calculator", page_icon="🏃") 
+# Unit selection
+height_unit = st.selectbox("Select Height Unit:", ["Centimeters (cm)", "Inches (in)"])
+weight_unit = st.selectbox("Select Weight Unit:", ["Kilograms (kg)", "Pounds (lb)"])
 
-st.title("🔢 Smart BMI Calculator") 
+# Input fields
+weight = st.number_input(f"Enter your weight ({weight_unit})", min_value=0.0, format="%.2f")
+height = st.number_input(f"Enter your height ({height_unit})", min_value=0.0, format="%.2f")
 
-st.write("Enter your height and weight in any units") 
+# Calculate button
+if st.button("Calculate BMI"):
 
-Unit selectors 
+    try:
+        # Match correct formula to selected units
+        if weight_unit == "Kilograms (kg)" and height_unit == "Centimeters (cm)":
+            bmi = calculate_bmi_kg_cm(weight, height)
 
-height_unit = st.selectbox("Select Height Unit", ["Centimeters (cm)", "Inches (in)"]) weight_unit = st.selectbox("Select Weight Unit", ["Kilograms (kg)", "Pounds (lb)"]) 
+        elif weight_unit == "Pounds (lb)" and height_unit == "Inches (in)":
+            bmi = calculate_bmi_lb_in(weight, height)
 
-Inputs 
+        else:
+            st.error("Please use matching units: kg with cm OR lb with inches.")
+            st.stop()
 
-height = st.number_input(f"Enter Height ({height_unit})", min_value=0.0, format="%.2f") weight = st.number_input(f"Enter Weight ({weight_unit})", min_value=0.0, format="%.2f") 
+        category = bmi_category(bmi)
 
-Button 
+        st.success(f"Your BMI is: {bmi}")
+        st.info(f"Health Category: {category}")
 
-if st.button("Calculate BMI"): 
+    except ValueError as e:
+        st.error(str(e))
 
-try: 
-   # Convert everything to metric system 
-   height_m = convert_height_to_meters(height, height_unit) 
-   weight_kg = convert_weight_to_kg(weight, weight_unit) 
- 
-   bmi = calculate_bmi(weight_kg, height_m) 
-   category = bmi_category(bmi) 
- 
-   st.success(f"Your BMI is: {bmi}") 
-   st.info(f"Health Category: {category}") 
- 
-except ValueError as e: 
-   st.error(str(e)) 
  
 
 
