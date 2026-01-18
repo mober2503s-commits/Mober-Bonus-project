@@ -31,7 +31,7 @@ def bmi_category(bmi):
 
 st.set_page_config(page_title="BMI Calculator", page_icon="🏃")
 
-st.title("🏃 BMI Calculator")
+st.title("🔢 BMI Calculator")
 
 st.write("Select your height and weight units")
 
