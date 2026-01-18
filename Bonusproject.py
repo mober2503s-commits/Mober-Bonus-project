@@ -1,6 +1,6 @@
 import streamlit as st 
 
----------------- LOGIC FUNCTIONS ---------------- 
+
 
 def convert_height_to_meters(height, unit): if height <= 0: raise ValueError("Height must be greater than zero.") 
 
